@@ -1,39 +1,39 @@
-distrito,ingreso_mensual_soles,nse_predominante,fuente,año
-San Isidro,6500,A,Estimado basado en NSE CPI 2024,2024
-Miraflores,5800,A/B,Estimado basado en NSE CPI 2024,2024
-San Borja,5200,A/B,Estimado basado en NSE CPI 2024,2024
-La Molina,5000,A/B,Estimado basado en NSE CPI 2024,2024
-Santiago de Surco,4800,B,Estimado basado en NSE CPI 2024,2024
-Surquillo,3200,B/C,Estimado basado en NSE CPI 2024,2024
-Jesús María,3500,B,Estimado basado en NSE CPI 2024,2024
-Lince,3400,B,Estimado basado en NSE CPI 2024,2024
-Magdalena del Mar,3300,B,Estimado basado en NSE CPI 2024,2024
-Pueblo Libre,3300,B,Estimado basado en NSE CPI 2024,2024
-Barranco,3800,B,Estimado basado en NSE CPI 2024,2024
-San Miguel,2900,B/C,Estimado basado en NSE CPI 2024,2024
-La Victoria,2200,C,Estimado basado en NSE CPI 2024,2024
-Breña,2400,C,Estimado basado en NSE CPI 2024,2024
-Lima Cercado,2500,B/C,Estimado basado en NSE CPI 2024,2024
-Rímac,1900,C/D,Estimado basado en NSE CPI 2024,2024
-Los Olivos,2300,C,Estimado basado en NSE CPI 2024,2024
-Independencia,1850,C/D,Estimado basado en NSE CPI 2024,2024
-San Martín de Porres,2400,C,Estimado basado en NSE CPI 2024,2024
-Comas,1950,C/D,Estimado basado en NSE CPI 2024,2024
-Carabayllo,1750,C/D,Estimado basado en NSE CPI 2024,2024
-Puente Piedra,1700,D,Estimado basado en NSE CPI 2024,2024
-San Juan de Lurigancho,1850,C/D,Estimado basado en NSE CPI 2024,2024
-Ate,2100,C,Estimado basado en NSE CPI 2024,2024
-Santa Anita,2000,C,Estimado basado en NSE CPI 2024,2024
-El Agustino,1800,C/D,Estimado basado en NSE CPI 2024,2024
-San Luis,2600,B/C,Estimado basado en NSE CPI 2024,2024
-Chorrillos,2300,C,Estimado basado en NSE CPI 2024,2024
-Villa María del Triunfo,1650,D,Estimado basado en NSE CPI 2024,2024
-Villa El Salvador,1500,D,Estimado basado en NSE CPI 2024,2024
-San Juan de Miraflores,1750,C/D,Estimado basado en NSE CPI 2024,2024
-Lurín,1800,C/D,Estimado basado en NSE CPI 2024,2024
-Pachacámac,1600,D,Estimado basado en NSE CPI 2024,2024
-Callao,2100,C,INEI - Lima Metropolitana,2024
-Bellavista,2300,C,Estimado basado en NSE CPI 2024,2024
-La Perla,2200,C,Estimado basado en NSE CPI 2024,2024
-Carmen de la Legua,1950,C/D,Estimado basado en NSE CPI 2024,2024
-Ventanilla,1700,D,Estimado basado en NSE CPI 2024,2024
+distrito,ingreso_mensual_soles,cono_inei,nse_predominante,fuente,año
+San Isidro,5200,Centro,A,INEI Cono Centro (S/3253) + ajuste NSE A,2024
+Miraflores,4800,Centro,A/B,INEI Cono Centro + ajuste NSE A/B,2024
+San Borja,4500,Centro,A/B,INEI Cono Centro + ajuste NSE A/B,2024
+La Molina,4300,Este,A/B,INEI Cono Este + ajuste NSE A/B,2024
+Santiago de Surco,4200,Sur,B,INEI Cono Sur (S/1729) + ajuste NSE B alto,2024
+Barranco,3800,Centro,B,INEI Cono Centro + ajuste NSE B,2024
+Jesús María,3500,Centro,B,INEI Cono Centro + ajuste NSE B,2024
+Lince,3400,Centro,B,INEI Cono Centro + ajuste NSE B,2024
+Magdalena del Mar,3300,Centro,B,INEI Cono Centro + ajuste NSE B,2024
+Pueblo Libre,3300,Centro,B,INEI Cono Centro + ajuste NSE B,2024
+Surquillo,3200,Centro,B/C,INEI Cono Centro + ajuste NSE B/C,2024
+San Miguel,2900,Centro,B/C,INEI Cono Centro + ajuste NSE B/C,2024
+San Luis,2600,Centro,B/C,INEI Cono Centro + ajuste NSE B/C,2024
+Lima Cercado,2500,Centro,B/C,INEI Cono Centro base,2024
+Breña,2400,Centro,C,INEI Cono Centro + ajuste NSE C,2024
+San Martín de Porres,2400,Norte,C,INEI Cono Norte (S/1799) + ajuste alto,2024
+Los Olivos,2300,Norte,C,INEI Cono Norte + ajuste medio,2024
+Chorrillos,2300,Sur,C,INEI Cono Sur + ajuste medio,2024
+Bellavista,2300,Callao,C,INEI Callao (S/1765) + ajuste alto,2024
+La Perla,2200,Callao,C,INEI Callao + ajuste medio,2024
+La Victoria,2200,Centro,C,INEI Cono Centro base,2024
+Ate,2100,Este,C,INEI Cono Este base,2024
+Callao,2100,Callao,C,INEI Callao base,2024
+Santa Anita,2000,Este,C,INEI Cono Este,2024
+Carmen de la Legua,1950,Callao,C/D,INEI Callao + ajuste bajo,2024
+Comas,1950,Norte,C/D,INEI Cono Norte base,2024
+Rímac,1900,Centro,C/D,INEI Cono Centro + ajuste NSE D,2024
+Independencia,1850,Norte,C/D,INEI Cono Norte + ajuste bajo,2024
+San Juan de Lurigancho,1850,Este,C/D,INEI Cono Este + ajuste bajo,2024
+El Agustino,1800,Este,C/D,INEI Cono Este + ajuste bajo,2024
+Lurín,1800,Sur,C/D,INEI Cono Sur base,2024
+San Juan de Miraflores,1750,Sur,C/D,INEI Cono Sur base,2024
+Carabayllo,1750,Norte,C/D,INEI Cono Norte + ajuste bajo,2024
+Puente Piedra,1700,Norte,D,INEI Cono Norte + ajuste bajo,2024
+Ventanilla,1700,Callao,D,INEI Callao + ajuste bajo,2024
+Villa María del Triunfo,1650,Sur,D,INEI Cono Sur + ajuste bajo,2024
+Pachacámac,1600,Sur,D,INEI Cono Sur + ajuste bajo,2024
+Villa El Salvador,1500,Sur,D,INEI Cono Sur + ajuste bajo NSE D,2024
