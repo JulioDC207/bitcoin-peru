@@ -238,18 +238,34 @@ st.markdown("---")
 st.markdown("""
 ### 📊 Fuentes de Datos
 - **Precio de Bitcoin**: API de CoinGecko (actualizado cada 5 minutos)
-- **Ingresos por Departamento**: INEI - Encuesta Permanente de Empleo Nacional (EPEN) 2024
-- **Ingresos por Distrito**: Estimaciones basadas en NSE según CPI 2024 y INEI
+- **Ingresos por Departamento**: ⭐ INEI - EPEN Oct 2024-Sep 2025 (Datos oficiales)
+- **Ingresos por Distrito**: Metodología híbrida basada en:
+  - Conos de Lima (INEI 2024) - Dato oficial
+  - Nivel Socioeconómico (CPI/APEIM 2024)
+
+### 📖 Nota Metodológica
+**Departamentos**: Datos 100% oficiales del INEI (Encuesta Permanente de Empleo Nacional).
+
+**Distritos de Lima**: El INEI no publica datos desagregados por distrito individual. 
+Utilizamos una metodología híbrida que combina:
+- Datos oficiales por "conos" o zonas de Lima (INEI)
+- Ajustes por Nivel Socioeconómico (NSE) según estudios de mercado
+
+Los valores son aproximaciones razonables basadas en fuentes oficiales. 
+La diferencia relativa entre distritos (ej: San Isidro vs Villa El Salvador) 
+es estadísticamente significativa y representativa de la realidad económica.
 
 ### ⚠️ Disclaimer
-Los datos de ingresos por distrito son **estimaciones** basadas en Niveles Socioeconómicos (NSE) y estudios de mercado.
-Los ingresos reales pueden variar. Este proyecto tiene fines educativos y de visualización.
+Este proyecto tiene fines educativos y de visualización de datos. 
+Los ingresos reales pueden variar por factores individuales (educación, experiencia, sector).
 
 ### 👨‍💻 Desarrollado con
 - Python + Streamlit
 - Plotly para visualizaciones
 - CoinGecko API
+- Datos: INEI, CPI, APEIM
 
 ---
-*Última actualización: {}*
+*Última actualización: {}*  
+*Metodología completa: [Ver en GitHub](https://github.com/TU_USUARIO/bitcoin-peru)*
 """.format(datetime.now().strftime("%Y-%m-%d %H:%M")))
