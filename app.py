@@ -129,7 +129,6 @@ st.markdown("### Poder adquisitivo de Bitcoin por departamento y distrito")
 
 # Obtener precio de Bitcoin
 btc_price = get_bitcoin_price()
-st.metric("Precio actual de Bitcoin", f"S/ {btc_price:,.2f} PEN", delta=None)
 
 # Cargar datos
 df_departamentos, df_lima = load_data()
@@ -137,6 +136,31 @@ df_departamentos, df_lima = load_data()
 # Calcular años de ingreso
 df_departamentos['años_trabajo'] = btc_price / (df_departamentos['ingreso_mensual_soles'] * 12)
 df_lima['años_trabajo'] = btc_price / (df_lima['ingreso_mensual_soles'] * 12)
+
+# NUEVA SECCIÓN: Métricas destacadas con promedio nacional
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("💰 Precio actual de Bitcoin", f"S/ {btc_price:,.2f} PEN")
+
+with col2:
+    # Calcular promedio nacional
+    promedio_nacional = df_departamentos['años_trabajo'].mean()
+    st.metric(
+        "🇵🇪 Promedio Nacional", 
+        f"{promedio_nacional:.1f} años",
+        help="Años de ingreso promedio que representa 1 BTC en Perú"
+    )
+
+with col3:
+    # Calcular ingreso mensual promedio nacional
+    ingreso_promedio_nacional = df_departamentos['ingreso_mensual_soles'].mean()
+    st.metric(
+        "📊 Ingreso Promedio Perú",
+        f"S/ {ingreso_promedio_nacional:,.0f}/mes"
+    )
+
+st.caption("💡 En promedio, un peruano necesitaría trabajar **{:.1f} años** para comprar 1 Bitcoin (basado en ingresos promedio de todos los departamentos)".format(promedio_nacional))
 
 # Selector de vista
 st.markdown("---")
@@ -265,7 +289,7 @@ elif vista == "🏙️ Por Distrito (Lima Metropolitana)":
             delta=None
         )
 
-else:  # Comparación Detallada - SECCIÓN MEJORADA
+else:  # Comparación Detallada
     # Título principal más grande
     st.markdown('<p class="comparison-title">🔍 Comparación Personalizada entre Distritos</p>', unsafe_allow_html=True)
     
@@ -387,12 +411,14 @@ Utilizamos una metodología híbrida que combina:
 - Datos oficiales por "conos" o zonas de Lima (INEI)
 - Ajustes por Nivel Socioeconómico (NSE) según estudios de mercado
 
+**Promedio Nacional**: Calculado como el promedio simple de todos los departamentos del Perú.
+
 ### ⚠️ Disclaimer
 Este proyecto tiene fines educativos y de visualización de datos. 
 Los ingresos reales pueden variar por factores individuales (educación, experiencia, sector).
 
 ### 👨‍💻 Desarrollado con
-- Python + Streamlit
+- Python + Streamlit/Render
 - Plotly para visualizaciones
 - APIs: Blockchain.info, CryptoCompare, Coinbase, Open Exchange Rates
 - Datos: INEI, CPI, APEIM
