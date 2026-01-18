@@ -16,13 +16,23 @@ st.set_page_config(
 @st.cache_data(ttl=300)  # Cache por 5 minutos
 def get_bitcoin_price():
     try:
+        # Intentar CoinGecko
         url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=pen"
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
         data = response.json()
-        return data['bitcoin']['pen']
-    except:
-        # Precio de respaldo en caso de error
-        return 350000  # Aproximado
+        price = data['bitcoin']['pen']
+        
+        # Validar que el precio sea razonable (mayor a 100k y menor a 2M)
+        if 100000 < price < 2000000:
+            return price
+        else:
+            raise ValueError("Precio fuera de rango esperado")
+            
+    except Exception as e:
+        st.warning(f"⚠️ No se pudo obtener el precio en tiempo real. Usando precio de referencia.")
+        # Precio de respaldo actualizado (aprox. USD 95k * 3.7)
+        return 351500
 
 # Función para cargar datos
 @st.cache_data
@@ -50,11 +60,11 @@ df_lima['años_trabajo'] = btc_price / (df_lima['ingreso_mensual_soles'] * 12)
 st.markdown("---")
 vista = st.radio(
     "Selecciona la vista:",
-    ["📍 Por Departamento (Todo Perú)", "🏙️ Por Distrito (Lima Metropolitana)", "🔍 Comparación Detallada"],
+    ["🗺️ Por Departamento (Todo Perú)", "🏙️ Por Distrito (Lima Metropolitana)", "🔍 Comparación Detallada"],
     horizontal=True
 )
 
-if vista == "📍 Por Departamento (Todo Perú)":
+if vista == "🗺️ Por Departamento (Todo Perú)":
     st.markdown("## Vista por Departamento")
     
     # Ordenar por años de trabajo
@@ -174,37 +184,61 @@ elif vista == "🏙️ Por Distrito (Lima Metropolitana)":
         )
 
 else:  # Comparación Detallada
-    st.markdown("## Comparación: San Isidro vs Villa El Salvador")
-    st.markdown("**La desigualdad del poder adquisitivo en Lima**")
+    st.markdown("## 🔍 Comparación Personalizada entre Distritos")
+    st.markdown("**Compara el poder adquisitivo entre dos distritos de Lima**")
     
-    # Obtener datos
-    san_isidro = df_lima[df_lima['distrito'] == 'San Isidro'].iloc[0]
-    villa_salvador = df_lima[df_lima['distrito'] == 'Villa El Salvador'].iloc[0]
+    # ⭐ NUEVO: Filtros para seleccionar distritos
+    col1, col2 = st.columns(2)
+    
+    # Lista de distritos ordenados alfabéticamente
+    distritos_disponibles = sorted(df_lima['distrito'].tolist())
+    
+    with col1:
+        distrito_1 = st.selectbox(
+            "Selecciona el primer distrito:",
+            distritos_disponibles,
+            index=distritos_disponibles.index('San Isidro') if 'San Isidro' in distritos_disponibles else 0
+        )
+    
+    with col2:
+        # Asegurar que el segundo distrito sea diferente al primero
+        distritos_disponibles_2 = [d for d in distritos_disponibles if d != distrito_1]
+        distrito_2 = st.selectbox(
+            "Selecciona el segundo distrito:",
+            distritos_disponibles_2,
+            index=distritos_disponibles_2.index('Villa El Salvador') if 'Villa El Salvador' in distritos_disponibles_2 else 0
+        )
+    
+    # Obtener datos de los distritos seleccionados
+    datos_distrito_1 = df_lima[df_lima['distrito'] == distrito_1].iloc[0]
+    datos_distrito_2 = df_lima[df_lima['distrito'] == distrito_2].iloc[0]
+    
+    st.markdown("---")
     
     # Métricas lado a lado
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 💎 San Isidro")
-        st.metric("Ingreso Mensual", f"S/ {san_isidro['ingreso_mensual_soles']:,.0f}")
-        st.metric("Ingreso Anual", f"S/ {san_isidro['ingreso_mensual_soles']*12:,.0f}")
-        st.metric("Años para comprar 1 BTC", f"{san_isidro['años_trabajo']:.1f} años")
-        st.info(f"NSE: {san_isidro['nse_predominante']}")
+        st.markdown(f"### 📍 {distrito_1}")
+        st.metric("Ingreso Mensual", f"S/ {datos_distrito_1['ingreso_mensual_soles']:,.0f}")
+        st.metric("Ingreso Anual", f"S/ {datos_distrito_1['ingreso_mensual_soles']*12:,.0f}")
+        st.metric("Años para comprar 1 BTC", f"{datos_distrito_1['años_trabajo']:.1f} años")
+        st.info(f"NSE: {datos_distrito_1['nse_predominante']}")
     
     with col2:
-        st.markdown("### 🏘️ Villa El Salvador")
-        st.metric("Ingreso Mensual", f"S/ {villa_salvador['ingreso_mensual_soles']:,.0f}")
-        st.metric("Ingreso Anual", f"S/ {villa_salvador['ingreso_mensual_soles']*12:,.0f}")
-        st.metric("Años para comprar 1 BTC", f"{villa_salvador['años_trabajo']:.1f} años")
-        st.info(f"NSE: {villa_salvador['nse_predominante']}")
+        st.markdown(f"### 📍 {distrito_2}")
+        st.metric("Ingreso Mensual", f"S/ {datos_distrito_2['ingreso_mensual_soles']:,.0f}")
+        st.metric("Ingreso Anual", f"S/ {datos_distrito_2['ingreso_mensual_soles']*12:,.0f}")
+        st.metric("Años para comprar 1 BTC", f"{datos_distrito_2['años_trabajo']:.1f} años")
+        st.info(f"NSE: {datos_distrito_2['nse_predominante']}")
     
     # Comparación visual
     st.markdown("### Comparación Visual")
     
     comparacion = pd.DataFrame({
-        'Distrito': ['San Isidro', 'Villa El Salvador'],
-        'Años de Trabajo': [san_isidro['años_trabajo'], villa_salvador['años_trabajo']],
-        'Ingreso Mensual': [san_isidro['ingreso_mensual_soles'], villa_salvador['ingreso_mensual_soles']]
+        'Distrito': [distrito_1, distrito_2],
+        'Años de Trabajo': [datos_distrito_1['años_trabajo'], datos_distrito_2['años_trabajo']],
+        'Ingreso Mensual': [datos_distrito_1['ingreso_mensual_soles'], datos_distrito_2['ingreso_mensual_soles']]
     })
     
     fig = go.Figure()
@@ -227,10 +261,22 @@ else:  # Comparación Detallada
     st.plotly_chart(fig, use_container_width=True)
     
     # Cálculo de brecha
-    ratio = villa_salvador['años_trabajo'] / san_isidro['años_trabajo']
-    st.warning(f"⚠️ **Una persona de Villa El Salvador necesita trabajar {ratio:.1f}x más tiempo que una de San Isidro para comprar 1 Bitcoin**")
+    # Determinar cuál distrito tiene más años (el más pobre)
+    if datos_distrito_1['años_trabajo'] > datos_distrito_2['años_trabajo']:
+        distrito_mayor = distrito_1
+        distrito_menor = distrito_2
+        años_mayor = datos_distrito_1['años_trabajo']
+        años_menor = datos_distrito_2['años_trabajo']
+    else:
+        distrito_mayor = distrito_2
+        distrito_menor = distrito_1
+        años_mayor = datos_distrito_2['años_trabajo']
+        años_menor = datos_distrito_1['años_trabajo']
     
-    diferencia_años = villa_salvador['años_trabajo'] - san_isidro['años_trabajo']
+    ratio = años_mayor / años_menor
+    diferencia_años = años_mayor - años_menor
+    
+    st.warning(f"⚠️ **Una persona de {distrito_mayor} necesita trabajar {ratio:.1f}x más tiempo que una de {distrito_menor} para comprar 1 Bitcoin**")
     st.error(f"📊 **Diferencia: {diferencia_años:.1f} años más de trabajo**")
 
 # Footer con información y disclaimer
@@ -260,12 +306,12 @@ Este proyecto tiene fines educativos y de visualización de datos.
 Los ingresos reales pueden variar por factores individuales (educación, experiencia, sector).
 
 ### 👨‍💻 Desarrollado con
-- Python + Streamlit
+- Python + Streamlit/Render
 - Plotly para visualizaciones
 - CoinGecko API
 - Datos: INEI, CPI, APEIM
 
 ---
 *Última actualización: {}*  
-*Metodología completa: [Ver en GitHub](https://github.com/TU_USUARIO/bitcoin-peru)*
+*Metodología completa: [Ver en GitHub](https://github.com/JulioDC207/bitcoin-peru)*
 """.format(datetime.now().strftime("%Y-%m-%d %H:%M")))
