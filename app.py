@@ -13,12 +13,44 @@ st.set_page_config(
     layout="wide"
 )
 
-# Función MEJORADA para obtener precio de Bitcoin (funciona en Render)
+# CSS personalizado para mejorar la jerarquía visual
+st.markdown("""
+<style>
+    /* Título de comparación más grande */
+    .comparison-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1f1f1f;
+        margin-bottom: 10px;
+    }
+    
+    /* Subtítulo descriptivo */
+    .comparison-subtitle {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 25px;
+    }
+    
+    /* Labels de selectbox más grandes */
+    .stSelectbox label {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        color: #1f1f1f !important;
+    }
+    
+    /* Nombres de distritos en las métricas */
+    h3 {
+        font-size: 26px !important;
+        font-weight: 700 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Función para obtener precio de Bitcoin
 @st.cache_data(ttl=300)  # Cache por 5 minutos
 def get_bitcoin_price():
     """
     Obtiene precio de BTC en PEN usando APIs que funcionan desde Render.
-    Prioriza APIs públicas sin rate limit estricto.
     """
     
     # API 1: Blockchain.info (sin rate limit, muy confiable)
@@ -29,7 +61,7 @@ def get_bitcoin_price():
         data = response.json()
         btc_usd = float(data['USD']['last'])
         
-        # Tipo de cambio PEN (API pública sin límites)
+        # Tipo de cambio PEN
         url_tc = "https://open.er-api.com/v6/latest/USD"
         response_tc = requests.get(url_tc, timeout=8)
         usd_to_pen = response_tc.json()['rates']['PEN']
@@ -42,35 +74,13 @@ def get_bitcoin_price():
     except Exception as e:
         st.warning(f"⚠️ Blockchain.info: {str(e)[:100]}")
     
-    # API 2: CoinAPI (versión gratuita, sin rate limit agresivo)
-    try:
-        url = "https://rest.coinapi.io/v1/exchangerate/BTC/USD"
-        headers = {'X-CoinAPI-Key': 'FREE-DEMO-KEY'}  # Demo key pública
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-        btc_usd = float(response.json()['rate'])
-        
-        # Tipo de cambio
-        url_tc = "https://open.er-api.com/v6/latest/USD"
-        response_tc = requests.get(url_tc, timeout=8)
-        usd_to_pen = response_tc.json()['rates']['PEN']
-        
-        btc_pen = btc_usd * usd_to_pen
-        
-        if 200000 < btc_pen < 2000000:
-            st.info("ℹ️ Precio actualizado desde CoinAPI")
-            return round(btc_pen, 2)
-    except Exception as e:
-        st.warning(f"⚠️ CoinAPI: {str(e)[:100]}")
-    
-    # API 3: CryptoCompare (API pública, generosa con rate limits)
+    # API 2: CryptoCompare (backup)
     try:
         url = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         btc_usd = float(response.json()['USD'])
         
-        # Tipo de cambio
         url_tc = "https://open.er-api.com/v6/latest/USD"
         response_tc = requests.get(url_tc, timeout=8)
         usd_to_pen = response_tc.json()['rates']['PEN']
@@ -83,14 +93,13 @@ def get_bitcoin_price():
     except Exception as e:
         st.warning(f"⚠️ CryptoCompare: {str(e)[:100]}")
     
-    # API 4: Coinbase (API pública sin autenticación)
+    # API 3: Coinbase (backup 2)
     try:
         url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         btc_usd = 1 / float(response.json()['data']['rates']['USD'])
         
-        # Tipo de cambio
         url_tc = "https://open.er-api.com/v6/latest/USD"
         response_tc = requests.get(url_tc, timeout=8)
         usd_to_pen = response_tc.json()['rates']['PEN']
@@ -105,7 +114,6 @@ def get_bitcoin_price():
     
     # Si todo falla
     st.error("❌ No se pudo conectar a ninguna API. Usando precio de referencia.")
-    # Precio actualizado manualmente cada semana
     return 382500
 
 # Función para cargar datos
@@ -257,30 +265,39 @@ elif vista == "🏙️ Por Distrito (Lima Metropolitana)":
             delta=None
         )
 
-else:  # Comparación Detallada
-    st.markdown("## 🔍 Comparación Personalizada entre Distritos")
-    st.markdown("**Compara el poder adquisitivo entre dos distritos de Lima**")
+else:  # Comparación Detallada - SECCIÓN MEJORADA
+    # Título principal más grande
+    st.markdown('<p class="comparison-title">🔍 Comparación Personalizada entre Distritos</p>', unsafe_allow_html=True)
     
-    # Filtros para seleccionar distritos
+    # Subtítulo descriptivo más grande
+    st.markdown('<p class="comparison-subtitle">Compara el poder adquisitivo de Bitcoin entre dos distritos de Lima</p>', unsafe_allow_html=True)
+    
+    st.markdown("")  # Espacio
+    
+    # Filtros para seleccionar distritos con labels más grandes
     col1, col2 = st.columns(2)
     
     # Lista de distritos ordenados alfabéticamente
     distritos_disponibles = sorted(df_lima['distrito'].tolist())
     
     with col1:
+        st.markdown("#### 📍 Primer Distrito")
         distrito_1 = st.selectbox(
             "Selecciona el primer distrito:",
             distritos_disponibles,
-            index=distritos_disponibles.index('San Isidro') if 'San Isidro' in distritos_disponibles else 0
+            index=distritos_disponibles.index('San Isidro') if 'San Isidro' in distritos_disponibles else 0,
+            key="distrito_1"
         )
     
     with col2:
+        st.markdown("#### 📍 Segundo Distrito")
         # Asegurar que el segundo distrito sea diferente al primero
         distritos_disponibles_2 = [d for d in distritos_disponibles if d != distrito_1]
         distrito_2 = st.selectbox(
             "Selecciona el segundo distrito:",
             distritos_disponibles_2,
-            index=distritos_disponibles_2.index('Villa El Salvador') if 'Villa El Salvador' in distritos_disponibles_2 else 0
+            index=distritos_disponibles_2.index('Villa El Salvador') if 'Villa El Salvador' in distritos_disponibles_2 else 0,
+            key="distrito_2"
         )
     
     # Obtener datos de los distritos seleccionados
@@ -289,25 +306,25 @@ else:  # Comparación Detallada
     
     st.markdown("---")
     
-    # Métricas lado a lado
+    # Métricas lado a lado con títulos más grandes
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown(f"### 📍 {distrito_1}")
-        st.metric("Ingreso Mensual", f"S/ {datos_distrito_1['ingreso_mensual_soles']:,.0f}")
-        st.metric("Ingreso Anual", f"S/ {datos_distrito_1['ingreso_mensual_soles']*12:,.0f}")
-        st.metric("Años para comprar 1 BTC", f"{datos_distrito_1['años_trabajo']:.1f} años")
-        st.info(f"NSE: {datos_distrito_1['nse_predominante']}")
+        st.metric("💰 Ingreso Mensual", f"S/ {datos_distrito_1['ingreso_mensual_soles']:,.0f}")
+        st.metric("📅 Ingreso Anual", f"S/ {datos_distrito_1['ingreso_mensual_soles']*12:,.0f}")
+        st.metric("⏱️ Años para 1 BTC", f"{datos_distrito_1['años_trabajo']:.1f} años")
+        st.info(f"🏘️ NSE: {datos_distrito_1['nse_predominante']}")
     
     with col2:
         st.markdown(f"### 📍 {distrito_2}")
-        st.metric("Ingreso Mensual", f"S/ {datos_distrito_2['ingreso_mensual_soles']:,.0f}")
-        st.metric("Ingreso Anual", f"S/ {datos_distrito_2['ingreso_mensual_soles']*12:,.0f}")
-        st.metric("Años para comprar 1 BTC", f"{datos_distrito_2['años_trabajo']:.1f} años")
-        st.info(f"NSE: {datos_distrito_2['nse_predominante']}")
+        st.metric("💰 Ingreso Mensual", f"S/ {datos_distrito_2['ingreso_mensual_soles']:,.0f}")
+        st.metric("📅 Ingreso Anual", f"S/ {datos_distrito_2['ingreso_mensual_soles']*12:,.0f}")
+        st.metric("⏱️ Años para 1 BTC", f"{datos_distrito_2['años_trabajo']:.1f} años")
+        st.info(f"🏘️ NSE: {datos_distrito_2['nse_predominante']}")
     
     # Comparación visual
-    st.markdown("### Comparación Visual")
+    st.markdown("### 📊 Comparación Visual")
     
     comparacion = pd.DataFrame({
         'Distrito': [distrito_1, distrito_2],
