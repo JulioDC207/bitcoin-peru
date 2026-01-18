@@ -12,27 +12,70 @@ st.set_page_config(
     layout="wide"
 )
 
-# Función para obtener precio de Bitcoin
+# Función mejorada para obtener precio de Bitcoin con múltiples APIs
 @st.cache_data(ttl=300)  # Cache por 5 minutos
 def get_bitcoin_price():
+    """
+    Intenta obtener el precio de BTC en PEN desde múltiples APIs.
+    Si todas fallan, usa precio de referencia.
+    """
+    
+    # API 1: Binance (la más confiable y rápida)
     try:
-        # Intentar CoinGecko
-        url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=pen"
-        response = requests.get(url, timeout=10)
+        url = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+        response = requests.get(url, timeout=5)
         response.raise_for_status()
-        data = response.json()
-        price = data['bitcoin']['pen']
+        btc_usd = float(response.json()['price'])
         
-        # Validar que el precio sea razonable (mayor a 100k y menor a 2M)
-        if 100000 < price < 2000000:
-            return price
-        else:
-            raise ValueError("Precio fuera de rango esperado")
-            
+        # Obtener tipo de cambio PEN/USD
+        url_forex = "https://api.exchangerate-api.com/v4/latest/USD"
+        response_forex = requests.get(url_forex, timeout=5)
+        pen_rate = response_forex.json()['rates']['PEN']
+        
+        btc_pen = btc_usd * pen_rate
+        
+        # Validar que sea razonable
+        if 200000 < btc_pen < 2000000:
+            st.success(f"✅ Precio obtenido de Binance (actualizado)")
+            return round(btc_pen, 2)
     except Exception as e:
-        st.warning(f"⚠️ No se pudo obtener el precio en tiempo real. Usando precio de referencia.")
-        # Precio de respaldo actualizado (aprox. USD 95k * 3.7)
-        return 351500
+        st.warning(f"⚠️ Binance API falló: {str(e)[:50]}")
+    
+    # API 2: CoinGecko (backup)
+    try:
+        url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=pen"
+        response = requests.get(url, timeout=8)
+        response.raise_for_status()
+        btc_pen = response.json()['bitcoin']['pen']
+        
+        if 200000 < btc_pen < 2000000:
+            st.info(f"ℹ️ Precio obtenido de CoinGecko")
+            return btc_pen
+    except Exception as e:
+        st.warning(f"⚠️ CoinGecko API falló: {str(e)[:50]}")
+    
+    # API 3: CoinCap (backup 2)
+    try:
+        url = "https://api.coincap.io/v2/assets/bitcoin"
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        btc_usd = float(response.json()['data']['priceUsd'])
+        
+        # Tipo de cambio aproximado (si falla el anterior)
+        pen_rate = 3.75  # Tipo de cambio aproximado
+        btc_pen = btc_usd * pen_rate
+        
+        if 200000 < btc_pen < 2000000:
+            st.info(f"ℹ️ Precio obtenido de CoinCap")
+            return round(btc_pen, 2)
+    except Exception as e:
+        st.warning(f"⚠️ CoinCap API falló: {str(e)[:50]}")
+    
+    # Si todas las APIs fallan
+    st.error("❌ No se pudo conectar a ninguna API. Usando precio de referencia del " + 
+             datetime.now().strftime("%Y-%m-%d"))
+    # Precio actualizado al 18 de enero 2025 (aprox USD 102k * 3.75)
+    return 382500
 
 # Función para cargar datos
 @st.cache_data
@@ -187,7 +230,7 @@ else:  # Comparación Detallada
     st.markdown("## 🔍 Comparación Personalizada entre Distritos")
     st.markdown("**Compara el poder adquisitivo entre dos distritos de Lima**")
     
-    # ⭐ NUEVO: Filtros para seleccionar distritos
+    # Filtros para seleccionar distritos
     col1, col2 = st.columns(2)
     
     # Lista de distritos ordenados alfabéticamente
@@ -283,7 +326,7 @@ else:  # Comparación Detallada
 st.markdown("---")
 st.markdown("""
 ### 📊 Fuentes de Datos
-- **Precio de Bitcoin**: API de CoinGecko (actualizado cada 5 minutos)
+- **Precio de Bitcoin**: APIs de Binance, CoinGecko y CoinCap (actualizado cada 5 minutos)
 - **Ingresos por Departamento**: ⭐ INEI - EPEN Oct 2024-Sep 2025 (Datos oficiales)
 - **Ingresos por Distrito**: Metodología híbrida basada en:
   - Conos de Lima (INEI 2024) - Dato oficial
@@ -306,9 +349,9 @@ Este proyecto tiene fines educativos y de visualización de datos.
 Los ingresos reales pueden variar por factores individuales (educación, experiencia, sector).
 
 ### 👨‍💻 Desarrollado con
-- Python + Streamlit/Render
+- Python + Streamlit
 - Plotly para visualizaciones
-- CoinGecko API
+- APIs: Binance, CoinGecko, CoinCap
 - Datos: INEI, CPI, APEIM
 
 ---
