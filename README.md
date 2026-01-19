@@ -1,111 +1,215 @@
-# 1 Bitcoin = ¿Cuántos años de trabajo en Perú? ₿
+# ₿ 1 Bitcoin = ¿Cuántos años puedes vivir en Perú?
 
-> **[🚀 Ver App en Vivo](https://bitcoin-peru-dvb4s3vkwbsfkzjdwbtac4.streamlit.app)**
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://bitcoin-peru.onrender.com/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-Visualización interactiva del poder adquisitivo de Bitcoin en Perú, mostrando cuántos años de ingreso promedio se necesitan para comprar 1 BTC en cada departamento y distrito de Lima.
+> Visualización interactiva que muestra cuántos años podrías vivir en cada departamento y distrito de Lima con 1 Bitcoin, basándose en datos oficiales de ingresos del INEI.
+
+**🌐 App en vivo:** [bitcoin-peru.onrender.com](https://bitcoin-peru.onrender.com/)
 
 ---
 
-## 🤔 ¿Por qué este proyecto?
+## 📊 ¿Qué hace esta app?
 
-Bitcoin se cotiza globalmente al mismo precio, pero el **poder adquisitivo** varía enormemente entre regiones. 
+Esta aplicación responde a la pregunta: **"Si tengo 1 Bitcoin, ¿cuántos años puedo vivir en Perú?"**
 
-En Perú:
-- Una persona de **Huancavelica** necesitaría trabajar **~26 años** para comprar 1 BTC
-- Una persona de **San Isidro (Lima)** solo necesitaría **~5 años**
+Compara el poder adquisitivo de Bitcoin en diferentes ubicaciones del Perú usando datos oficiales de ingresos. Por ejemplo:
+- Con 1 BTC puedes vivir **~5 años** en San Isidro (Lima)
+- Con 1 BTC puedes vivir **~18 años** en Villa El Salvador (Lima)
+- Con 1 BTC puedes vivir **~10.5 años** según el promedio nacional
 
-Este proyecto visualiza esa desigualdad económica de forma clara, interactiva e impactante usando datos oficiales del INEI.
+**Inspirado en:** [pricedinbitcoin21.com](https://pricedinbitcoin21.com/bitcoin-income)
 
 ---
 
 ## ✨ Características
 
-- 📍 **Vista por Departamento**: Compara los 25 departamentos del Perú con datos oficiales INEI
-- 🏙️ **Vista por Distrito**: Análisis detallado de 38 distritos de Lima Metropolitana
-- 🔍 **Comparación Directa**: San Isidro vs Villa El Salvador - visualiza la brecha económica
-- ₿ **Precio en Tiempo Real**: Se actualiza automáticamente cada 5 minutos desde CoinGecko API
-- 📊 **Gráficos Interactivos**: Visualizaciones profesionales con Plotly
-- 📱 **Responsive**: Funciona en desktop y móvil
+- 🗺️ **Vista por Departamento**: Compara todos los departamentos del Perú
+- 🏙️ **Vista por Distrito**: Explora distritos de Lima Metropolitana
+- 🔍 **Comparador Interactivo**: Compara cualquier par de distritos
+- 💰 **Precio actualizado**: Bitcoin en tiempo real desde múltiples APIs
+- 📊 **Visualizaciones interactivas**: Gráficos con Plotly
+- 🇵🇪 **Datos oficiales**: INEI (Instituto Nacional de Estadística e Informática)
 
 ---
 
-## 📊 Fuentes de Datos
+## 🚀 Demo
 
-- **Precio Bitcoin**: [CoinGecko API](https://www.coingecko.com/es/api) - Actualización cada 5 minutos
-- **Ingresos por Departamento**: INEI - EPEN (Encuesta Permanente de Empleo Nacional) Oct 2024-Sep 2025 ⭐ Datos oficiales
-- **Ingresos por Distrito Lima**: Metodología híbrida basada en:
-  - Datos oficiales por conos/zonas (INEI 2024)
-  - Nivel Socioeconómico (CPI/APEIM 2024)
-
-**📖 Ver metodología completa y referencias:** [METODOLOGIA_DATOS.md](METODOLOGIA_DATOS.md)
+**Pruébalo aquí:** [bitcoin-peru.onrender.com](https://bitcoin-peru.onrender.com/)
 
 ---
 
-## 🚀 Deploy en Streamlit Cloud
+## 📖 Metodología
 
-### Archivos del Proyecto
+### Cálculo
+```
+Años de vida = Valor de 1 BTC / (Ingreso mensual promedio × 12)
+```
+
+### Interpretación
+Si en un distrito sale **5.1 años**, significa que con 1 Bitcoin podrías vivir **5.1 años** manteniendo el nivel de vida promedio de ese distrito (usando el ingreso mensual promedio como referencia de gasto).
+
+### Fuentes de Datos
+
+**Ingresos por Departamento:**
+- ⭐ **INEI - EPEN** (Encuesta Permanente de Empleo Nacional)
+- Período: Octubre 2024 - Septiembre 2025
+- Datos oficiales 100%
+
+**Ingresos por Distrito (Lima):**
+- Metodología híbrida basada en:
+  - Conos de Lima (INEI 2024) - Dato oficial
+  - Nivel Socioeconómico NSE (CPI/APEIM 2024)
+- Los valores son aproximaciones razonables basadas en fuentes oficiales
+
+**Precio de Bitcoin:**
+- APIs: Blockchain.info, CryptoCompare, Coinbase
+- Actualización: Cada 5 minutos
+- Tipo de cambio: Open Exchange Rates
+
+---
+
+## 💡 Ejemplo Práctico
+
+Si tienes **1 BTC** (≈ S/ 320,000):
+
+| Ubicación | Ingreso Promedio | Años de Vida | NSE |
+|-----------|------------------|--------------|-----|
+| **San Isidro** | S/ 5,200/mes | ~5 años | A |
+| **Miraflores** | S/ 4,800/mes | ~5.5 años | A/B |
+| **San Juan de Lurigancho** | S/ 1,800/mes | ~15 años | C/D |
+| **Villa El Salvador** | S/ 1,500/mes | ~18 años | D |
+| **Promedio Nacional** | S/ 2,538/mes | ~10.5 años | - |
+
+---
+
+## 🛠️ Tecnologías
+
+- **Frontend**: [Streamlit](https://streamlit.io/)
+- **Visualizaciones**: [Plotly](https://plotly.com/)
+- **Datos**: Pandas, NumPy
+- **APIs**: Requests
+- **Deploy**: [Render](https://render.com/)
+
+---
+
+## 🏃‍♂️ Ejecutar localmente
+
+### Requisitos previos
+- Python 3.8 o superior
+- pip
+
+### Instalación
+
+1. Clona el repositorio:
+```bash
+git clone https://github.com/JulioDC207/bitcoin-peru.git
+cd bitcoin-peru
+```
+
+2. Instala las dependencias:
+```bash
+pip install -r requirements.txt
+```
+
+3. Ejecuta la app:
+```bash
+streamlit run app.py
+```
+
+4. Abre tu navegador en: `http://localhost:8501`
+
+---
+
+## 📂 Estructura del Proyecto
+
 ```
 bitcoin-peru/
-├── app.py                           # Aplicación principal
-├── requirements.txt                 # Dependencias Python
-├── ingresos_departamentos.csv       # Datos por departamento (INEI)
-├── ingresos_lima_distritos.csv      # Datos por distrito Lima
-├── README.md                        # Este archivo
-└── METODOLOGIA_DATOS.md            # Documentación de fuentes
+├── app.py                              # Aplicación principal
+├── requirements.txt                    # Dependencias de Python
+├── ingresos_departamentos.csv          # Datos de departamentos (INEI)
+├── ingresos_lima_distritos.csv         # Datos de distritos de Lima
+└── README.md                           # Este archivo
 ```
 
 ---
-## 🛠️ Tech Stack
 
-- **Python 3.9+**: Lenguaje principal
-- **Streamlit**: Framework para aplicaciones web de datos
-- **Plotly**: Biblioteca de visualización interactiva
-- **Pandas**: Manipulación y análisis de datos
-- **Requests**: Consumo de APIs (CoinGecko)
+## 📊 Archivos de Datos
 
-### Dependencias (requirements.txt)
-```
-streamlit
-pandas
-plotly
-requests
-```
+### `ingresos_departamentos.csv`
+Contiene ingresos mensuales promedio por departamento del Perú (INEI).
 
----
-## 📝 Notas Metodológicas
-
-### Departamentos
-✅ Datos **100% oficiales** del INEI (Encuesta Permanente de Empleo Nacional, período Oct 2024 - Sep 2025)
-
-### Distritos de Lima
-⚠️ El INEI no publica datos desagregados por distrito individual. 
-
-Solución implementada:
-1. Base oficial: Datos por "conos" o zonas de Lima (INEI 2024)
-2. Ajuste: Nivel Socioeconómico por distrito (CPI/APEIM 2024)
-
-Los valores son **aproximaciones razonables** basadas en fuentes oficiales. La diferencia relativa entre distritos (ej: San Isidro vs Villa El Salvador) es estadísticamente significativa y representativa de la realidad económica peruana.
-
-**Documentación completa:** [METODOLOGIA_DATOS.md](METODOLOGIA_DATOS.md)
+### `ingresos_lima_distritos.csv`
+Contiene ingresos mensuales estimados por distrito de Lima con NSE predominante.
 
 ---
 
-## 🤝 Contribuciones
+## 🤝 Contribuir
 
-¿Tienes datos más precisos, sugerencias o encontraste un bug?
+¡Las contribuciones son bienvenidas! Si tienes ideas para mejorar la app:
 
-- 🐛 **Issues**: [Reportar un problema](https://github.com/JulioDC207/bitcoin-peru/issues)
-- 🔧 **Pull Requests**: ¡Bienvenidos!
-- 💡 **Ideas**: Abre una discusión en Issues
-
----
-
-## 📄 Licencia
-
-MIT License - Libre para usar, modificar y distribuir.
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/mejora`)
+3. Commit tus cambios (`git commit -m 'Agregar mejora'`)
+4. Push a la rama (`git push origin feature/mejora`)
+5. Abre un Pull Request
 
 ---
 
-## 👨‍💻 Autor Julio Conza
+## ⚠️ Disclaimer
 
-Desarrollado con ❤️ para visualizar la economía peruana y el poder adquisitivo de Bitcoin.
+Este proyecto tiene **fines educativos y de visualización de datos**. 
+
+Los cálculos son aproximaciones basadas en:
+- Ingresos promedio oficiales del INEI
+- Tipo de cambio actual
+- Precio de Bitcoin en tiempo real
+
+Los gastos reales pueden variar significativamente según:
+- Estilo de vida personal
+- Composición familiar
+- Gastos de salud
+- Gastos de vivienda
+- Y otros factores individuales
+
+**No es asesoría financiera.** Los datos históricos no garantizan resultados futuros.
+
+---
+
+## 📜 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 👨‍💻 Autor
+
+**Julio D. Conza**
+- GitHub: [@JulioDC207](https://github.com/JulioDC207)
+- LinkedIn: [https://www.linkedin.com/in/julio-david-conza-zelada-129890151/]
+
+---
+
+## 🙏 Agradecimientos
+
+- **INEI** - Por los datos oficiales de ingresos
+- **pricedinbitcoin21.com** - Inspiración para el enfoque
+- **CPI/APEIM** - Datos de NSE
+- **Anthropic Claude** - Asistencia en desarrollo
+
+---
+
+## 📈 Estadísticas
+
+![GitHub stars](https://img.shields.io/github/stars/JulioDC207/bitcoin-peru?style=social)
+![GitHub forks](https://img.shields.io/github/forks/JulioDC207/bitcoin-peru?style=social)
+
+---
+
+**¿Te gustó el proyecto? ¡Dale una ⭐ en GitHub!**
+
+**¿Tienes sugerencias?** Abre un [issue](https://github.com/JulioDC207/bitcoin-peru/issues)
+
+---
+
+*Última actualización: Enero 2025*
