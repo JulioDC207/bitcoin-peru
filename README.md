@@ -85,39 +85,11 @@ Si tienes **1 BTC** (≈ S/ 320,000):
 
 ## 🛠️ Tecnologías
 
-- **Frontend**: [Streamlit](https://streamlit.io/)
+- **Frontend**: [Render](https://render.com/)
 - **Visualizaciones**: [Plotly](https://plotly.com/)
 - **Datos**: Pandas, NumPy
-- **APIs**: Requests
-- **Deploy**: [Render](https://render.com/)
+- **APIs**: Blochain.info
 
----
-
-## 🏃‍♂️ Ejecutar localmente
-
-### Requisitos previos
-- Python 3.8 o superior
-- pip
-
-### Instalación
-
-1. Clona el repositorio:
-```bash
-git clone https://github.com/JulioDC207/bitcoin-peru.git
-cd bitcoin-peru
-```
-
-2. Instala las dependencias:
-```bash
-pip install -r requirements.txt
-```
-
-3. Ejecuta la app:
-```bash
-streamlit run app.py
-```
-
-4. Abre tu navegador en: `http://localhost:8501`
 
 ---
 
@@ -192,6 +164,7 @@ Este proyecto está bajo la licencia MIT. Ver archivo [LICENSE](LICENSE) para m�
 
 ## 🙏 Agradecimientos
 
+- **CLAUDE**
 - **INEI** - Por los datos oficiales de ingresos
 - **pricedinbitcoin21.com** - Inspiración para el enfoque
 - **CPI/APEIM** - Datos de NSE
